@@ -121,7 +121,7 @@ public class MainActivity extends Activity {
         row.setGravity(Gravity.CENTER_VERTICAL);
         content.addView(row, margins(-1, dp(42), 0, 0, 0, dp(34)));
         ImageView mark = new ImageView(this);
-        mark.setImageResource(R.drawable.app_icon);
+        mark.setImageResource(R.drawable.mascot_head);
         mark.setBackground(round(SURFACE_ALT, 13, OUTLINE));
         mark.setPadding(dp(7), dp(7), dp(7), dp(7));
         row.addView(mark, new LinearLayout.LayoutParams(dp(42), dp(42)));
@@ -150,6 +150,14 @@ public class MainActivity extends Activity {
         content.addView(card, new LinearLayout.LayoutParams(-1, dp(190)));
         heroArtwork = new HeroArtwork();
         card.addView(heroArtwork, new FrameLayout.LayoutParams(-1, -1));
+        ImageView mascot = new ImageView(this);
+        mascot.setImageResource(R.drawable.mascot_elephant);
+        mascot.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        mascot.setContentDescription("Smiling elephant lifting a dumbbell");
+        FrameLayout.LayoutParams mascotLayout = new FrameLayout.LayoutParams(
+                dp(164), dp(164), Gravity.RIGHT | Gravity.BOTTOM);
+        mascotLayout.setMargins(0, 0, -dp(5), -dp(8));
+        card.addView(mascot, mascotLayout);
         LinearLayout words = new LinearLayout(this);
         words.setOrientation(LinearLayout.VERTICAL);
         words.setPadding(dp(23), dp(23), dp(23), dp(21));

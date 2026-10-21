@@ -10,6 +10,12 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal">
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginRight="4dp"
+            android:contentDescription="@string/mascot_description"
+            android:src="@drawable/mascot_head" />
         <TextView
             android:id="@+id/widget_title"
             android:layout_width="0dp"
@@ -19,7 +25,7 @@
             android:letterSpacing="0.08"
             android:text="GYMGRID"
             android:textColor="#43CC75"
-            android:textSize="12sp" />
+            android:textSize="11sp" />
         <TextView
             android:id="@+id/widget_streak"
             android:layout_width="wrap_content"
