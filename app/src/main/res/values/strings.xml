@@ -2,8 +2,8 @@
     <string name="app_name">GymGrid</string>
     <string name="widget_month_name">GymGrid · Month</string>
     <string name="widget_year_name">GymGrid · Year</string>
-    <string name="calendar_description">Workout calendar: green is Yes, gray is No</string>
+    <string name="calendar_description">Workout calendar: green is Yes, coral is No</string>
     <string name="widget_yes_description">Yes, I trained today</string>
     <string name="widget_no_description">No, I did not train today</string>
-    <string name="mascot_description">GymGrid elephant mascot</string>
+    <string name="dumbbell_description">Cartoon green dumbbell</string>
 </resources>

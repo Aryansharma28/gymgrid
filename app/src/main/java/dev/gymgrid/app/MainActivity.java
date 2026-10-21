@@ -38,6 +38,7 @@ public class MainActivity extends Activity {
     private static final int WHITE = Color.rgb(239, 249, 240);
     private static final int MUTED = Color.rgb(154, 183, 163);
     private static final int GREEN = GridPainter.GREEN;
+    private static final int CORAL = GridPainter.MUTED;
     private YearMonth displayed = YearMonth.now();
     private TextView monthTitle;
     private TextView heroDate;
@@ -50,6 +51,7 @@ public class MainActivity extends Activity {
     private MonthView monthView;
     private YearView yearView;
     private HeroArtwork heroArtwork;
+    private ImageView heroIcon;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
@@ -91,6 +93,12 @@ public class MainActivity extends Activity {
         buildYear(content);
         buildDock(screen);
         setContentView(root);
+        if (Build.VERSION.SDK_INT >= 30) {
+            android.view.WindowInsetsController controller = getWindow().getInsetsController();
+            if (controller != null) controller.setSystemBarsAppearance(0,
+                    android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+                            | android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS);
+        }
         root.requestApplyInsets();
         refresh(false);
     }
@@ -106,9 +114,6 @@ public class MainActivity extends Activity {
         if (Build.VERSION.SDK_INT >= 29) getWindow().setNavigationBarContrastEnforced(false);
         if (Build.VERSION.SDK_INT >= 30) {
             getWindow().setDecorFitsSystemWindows(false);
-            getWindow().getInsetsController().setSystemBarsAppearance(0,
-                    android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-                            | android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS);
         } else {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -121,7 +126,7 @@ public class MainActivity extends Activity {
         row.setGravity(Gravity.CENTER_VERTICAL);
         content.addView(row, margins(-1, dp(42), 0, 0, 0, dp(34)));
         ImageView mark = new ImageView(this);
-        mark.setImageResource(R.drawable.mascot_head);
+        mark.setImageResource(R.drawable.gym_dumbbell);
         mark.setBackground(round(SURFACE_ALT, 13, OUTLINE));
         mark.setPadding(dp(7), dp(7), dp(7), dp(7));
         row.addView(mark, new LinearLayout.LayoutParams(dp(42), dp(42)));
@@ -150,14 +155,14 @@ public class MainActivity extends Activity {
         content.addView(card, new LinearLayout.LayoutParams(-1, dp(190)));
         heroArtwork = new HeroArtwork();
         card.addView(heroArtwork, new FrameLayout.LayoutParams(-1, -1));
-        ImageView mascot = new ImageView(this);
-        mascot.setImageResource(R.drawable.mascot_elephant);
-        mascot.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        mascot.setContentDescription("Smiling elephant lifting a dumbbell");
-        FrameLayout.LayoutParams mascotLayout = new FrameLayout.LayoutParams(
+        heroIcon = new ImageView(this);
+        heroIcon.setImageResource(R.drawable.gym_dumbbell);
+        heroIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        heroIcon.setContentDescription("Playful green dumbbell illustration");
+        FrameLayout.LayoutParams iconLayout = new FrameLayout.LayoutParams(
                 dp(164), dp(164), Gravity.RIGHT | Gravity.BOTTOM);
-        mascotLayout.setMargins(0, 0, -dp(5), -dp(8));
-        card.addView(mascot, mascotLayout);
+        iconLayout.setMargins(0, 0, -dp(5), -dp(8));
+        card.addView(heroIcon, iconLayout);
         LinearLayout words = new LinearLayout(this);
         words.setOrientation(LinearLayout.VERTICAL);
         words.setPadding(dp(23), dp(23), dp(23), dp(21));
@@ -287,6 +292,26 @@ public class MainActivity extends Activity {
                         .setInterpolator(new OvershootInterpolator(1.5f)).start()).start();
         WorkoutStore.setAnswer(this, LocalDate.now(), done);
         refresh(true);
+        animateAnswer(done);
+    }
+
+    private void animateAnswer(boolean done) {
+        if (!ValueAnimator.areAnimatorsEnabled()) return;
+        heroArtwork.pulse(done);
+        heroIcon.animate().cancel();
+        heroIcon.setPivotX(heroIcon.getWidth() * .5f);
+        heroIcon.setPivotY(heroIcon.getHeight() * .55f);
+        heroIcon.animate().translationY(done ? -dp(20) : dp(7))
+                .rotation(done ? -14f : 9f).scaleX(1.08f).scaleY(1.08f)
+                .setDuration(170).setInterpolator(new DecelerateInterpolator())
+                .withEndAction(() -> heroIcon.animate().translationY(0).rotation(0)
+                        .scaleX(1f).scaleY(1f).setDuration(300)
+                        .setInterpolator(new OvershootInterpolator(1.7f)).start()).start();
+        heroStatus.animate().cancel();
+        heroStatus.setScaleX(.87f);
+        heroStatus.setScaleY(.87f);
+        heroStatus.animate().scaleX(1f).scaleY(1f).setDuration(320)
+                .setInterpolator(new OvershootInterpolator(1.8f)).start();
     }
 
     private void changeMonth(int amount) {
@@ -307,15 +332,16 @@ public class MainActivity extends Activity {
                 DateTimeFormatter.ofPattern("MMMM yyyy", Locale.getDefault())));
         heroStatus.setText(!answered ? "Ready when you are" : done
                 ? "Workout logged  ✓" : "No workout today");
-        heroStatus.setTextColor(done ? Color.rgb(12, 37, 22) : WHITE);
-        heroStatus.setBackground(round(done ? GREEN : Color.rgb(48, 84, 58), 20, 0));
+        heroStatus.setTextColor(answered ? BG : WHITE);
+        heroStatus.setBackground(round(!answered ? Color.rgb(48, 84, 58)
+                : done ? GREEN : CORAL, 20, 0));
         dockStatus.setText(!answered ? "READY" : done ? "YES  ✓" : "NO  ✓");
-        dockStatus.setTextColor(done ? GREEN : answered ? WHITE : MUTED);
+        dockStatus.setTextColor(done ? GREEN : answered ? CORAL : MUTED);
         yesButton.setBackground(buttonBackground(done ? GREEN : Color.rgb(32, 78, 47), GREEN));
         yesButton.setTextColor(done ? BG : Color.rgb(194, 245, 205));
         noButton.setBackground(buttonBackground(answered && !done
-                ? Color.rgb(79, 101, 83) : Color.rgb(32, 53, 39), OUTLINE));
-        noButton.setTextColor(WHITE);
+                ? CORAL : Color.rgb(79, 45, 41), CORAL));
+        noButton.setTextColor(answered && !done ? BG : Color.rgb(255, 194, 174));
         heroArtwork.setActive(done, animate);
         monthView.invalidate();
         yearView.invalidate();
@@ -394,6 +420,8 @@ public class MainActivity extends Activity {
     private final class HeroArtwork extends View {
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         private float glow = 0f;
+        private float burst = 0f;
+        private int burstColor = GREEN;
         HeroArtwork() { super(MainActivity.this); }
 
         void setActive(boolean active, boolean animate) {
@@ -404,6 +432,18 @@ public class MainActivity extends Activity {
             animator.setInterpolator(new DecelerateInterpolator());
             animator.addUpdateListener(value -> {
                 glow = (float) value.getAnimatedValue();
+                invalidate();
+            });
+            animator.start();
+        }
+
+        void pulse(boolean trained) {
+            burstColor = trained ? GREEN : CORAL;
+            ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
+            animator.setDuration(480);
+            animator.setInterpolator(new DecelerateInterpolator());
+            animator.addUpdateListener(value -> {
+                burst = (float) value.getAnimatedValue();
                 invalidate();
             });
             animator.start();
@@ -422,6 +462,17 @@ public class MainActivity extends Activity {
                 paint.setStrokeWidth(dp(1));
                 paint.setColor(Color.argb(36 + (int) (glow * 18), 178, 239, 188));
                 canvas.drawCircle(w * .92f, h * .17f, dp(41 + i * 32), paint);
+            }
+            if (burst > 0f && burst < 1f) {
+                float centerX = w * .79f;
+                float centerY = h * .54f;
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setStrokeWidth(dp(3));
+                paint.setColor(Color.argb((int) (190 * (1f - burst)),
+                        Color.red(burstColor), Color.green(burstColor), Color.blue(burstColor)));
+                canvas.drawCircle(centerX, centerY, dp(28 + 85 * burst), paint);
+                paint.setStrokeWidth(dp(1.5f));
+                canvas.drawCircle(centerX, centerY, dp(10 + 115 * burst), paint);
             }
             paint.setStyle(Paint.Style.FILL);
         }
@@ -466,14 +517,15 @@ public class MainActivity extends Activity {
                 paint.setStyle(Paint.Style.FILL);
                 canvas.drawRoundRect(l, t, r, b, dp(12), dp(12), paint);
                 if (date.equals(LocalDate.now())) {
-                    paint.setColor(Color.rgb(134, 224, 160));
+                    paint.setColor(color == CORAL ? CORAL : Color.rgb(134, 224, 160));
                     paint.setStyle(Paint.Style.STROKE);
                     paint.setStrokeWidth(dp(1.5f));
                     canvas.drawRoundRect(l - dp(2), t - dp(2), r + dp(2), b + dp(2),
                             dp(14), dp(14), paint);
                 }
                 paint.setStyle(Paint.Style.FILL);
-                paint.setColor(color == GREEN ? BG : date.isAfter(LocalDate.now()) ? MUTED : WHITE);
+                paint.setColor(color == GREEN || color == CORAL ? BG
+                        : date.isAfter(LocalDate.now()) ? MUTED : WHITE);
                 paint.setTextSize(Math.min(dp(14), size * .37f));
                 paint.setTypeface(android.graphics.Typeface.create("sans-serif-medium", 0));
                 canvas.drawText(Integer.toString(day), centerX,

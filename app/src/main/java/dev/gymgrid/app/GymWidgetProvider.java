@@ -32,25 +32,38 @@ public class GymWidgetProvider extends AppWidgetProvider {
     }
 
     static void update(Context context, AppWidgetManager manager, int id, boolean year) {
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
+        android.os.Bundle options = manager.getAppWidgetOptions(id);
+        int width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH,
+                year ? 250 : 110);
+        int height = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 180);
+        boolean compact = height < 145;
+        boolean fullGrid = !compact && width >= 230;
+        RemoteViews views = new RemoteViews(context.getPackageName(),
+                compact ? R.layout.widget_compact : R.layout.widget);
         boolean yes = WorkoutStore.isDone(context, LocalDate.now());
         boolean answered = WorkoutStore.hasAnswer(context, LocalDate.now());
-        views.setImageViewBitmap(R.id.widget_image,
-                GridPainter.widget(WorkoutStore.days(context), WorkoutStore.answered(context),
-                        year, year ? 900 : 480, year ? 175 : 250));
+        if (!compact) {
+            views.setImageViewBitmap(R.id.widget_image, fullGrid
+                    ? GridPainter.widget(WorkoutStore.days(context), WorkoutStore.answered(context),
+                            year, year ? 900 : 480, year ? 175 : 250)
+                    : GridPainter.recent(WorkoutStore.days(context),
+                            WorkoutStore.answered(context), 480, 300));
+            views.setViewVisibility(R.id.widget_streak, year ? View.VISIBLE : View.GONE);
+            if (year) views.setTextViewText(R.id.widget_streak,
+                    WorkoutStore.streak(context) + " DAY STREAK");
+        }
         views.setTextViewText(R.id.widget_status,
-                answered ? (yes ? "Today: YES" : "Today: NO") : "Today: ready");
+                compact ? (answered ? (yes ? "YES ✓" : "NO ✓") : "READY")
+                        : answered ? (yes ? "Today: YES" : "Today: NO") : "Today: ready");
         views.setTextColor(R.id.widget_status,
-                yes ? GridPainter.GREEN : answered ? GridPainter.SUBTEXT : GridPainter.TEXT);
+                yes ? GridPainter.GREEN : answered ? GridPainter.MUTED : GridPainter.TEXT);
         views.setTextViewText(R.id.widget_yes, yes ? "✓ YES" : "YES");
         views.setTextViewText(R.id.widget_no, answered && !yes ? "✓ NO" : "NO");
-        views.setViewVisibility(R.id.widget_streak, year ? View.VISIBLE : View.GONE);
-        if (year) views.setTextViewText(R.id.widget_streak,
-                WorkoutStore.streak(context) + " DAY STREAK");
-        Intent open = new Intent(context, MainActivity.class);
+        Intent open = new Intent(context, MainActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pending = PendingIntent.getActivity(context, 0, open,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        views.setOnClickPendingIntent(R.id.widget_image, pending);
+        if (!compact) views.setOnClickPendingIntent(R.id.widget_image, pending);
         views.setOnClickPendingIntent(R.id.widget_title, pending);
         views.setOnClickPendingIntent(R.id.widget_status, pending);
         Intent yesIntent = new Intent(context, GymWidgetProvider.class).setAction(YES);

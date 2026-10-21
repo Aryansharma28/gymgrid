@@ -12,7 +12,7 @@ import java.util.Set;
 
 final class GridPainter {
     static final int BACKGROUND = Color.rgb(12, 31, 23);
-    static final int MUTED = Color.rgb(48, 73, 59);
+    static final int MUTED = Color.rgb(255, 145, 111);
     static final int UNANSWERED = Color.rgb(30, 53, 39);
     static final int GREEN = Color.rgb(67, 204, 117);
     static final int TEXT = Color.rgb(236, 247, 237);
@@ -34,6 +34,34 @@ final class GridPainter {
             YearMonth month = YearMonth.now();
             drawMonth(canvas, days, answered, month, pad, height * .04f,
                     width - 2 * pad, height * .92f, false);
+        }
+        return bitmap;
+    }
+
+    static Bitmap recent(Set<String> days, Set<String> answered, int width, int height) {
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawColor(BACKGROUND);
+        float gap = width * .025f;
+        float cellWidth = (width - gap * 3f) / 2f;
+        float cellHeight = (height - gap * 5f) / 4f;
+        LocalDate today = LocalDate.now();
+        paint.setTypeface(android.graphics.Typeface.create("sans-serif-medium", 0));
+        for (int i = 0; i < 8; i++) {
+            LocalDate date = today.minusDays(i);
+            int column = i % 2;
+            int row = i / 2;
+            float x = gap + column * (cellWidth + gap);
+            float y = gap + row * (cellHeight + gap);
+            int color = dayColor(date, days, answered);
+            rectangle(canvas, x, y, x + cellWidth, y + cellHeight,
+                    Math.min(cellHeight * .25f, 20f), color);
+            paint.setColor(color == GREEN || color == MUTED ? BACKGROUND : TEXT);
+            paint.setTextSize(Math.min(cellHeight * .46f, 30f));
+            paint.setStyle(Paint.Style.FILL);
+            canvas.drawText(date.getDayOfWeek().name().substring(0, 1) + " "
+                    + date.getDayOfMonth(), x + gap * 2f,
+                    y + cellHeight * .66f, paint);
         }
         return bitmap;
     }
@@ -63,7 +91,8 @@ final class GridPainter {
             rectangle(canvas, x, y, x + size, y + size, size * .18f, color);
             if (labels && cellW >= 31f) {
                 text(canvas, Integer.toString(day), x + size * .28f,
-                        y + size * .69f, size * .42f, color == GREEN ? BACKGROUND : TEXT, false);
+                        y + size * .69f, size * .42f,
+                        color == GREEN || color == MUTED ? BACKGROUND : TEXT, false);
             }
         }
     }
