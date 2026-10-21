@@ -1,0 +1,43 @@
+name: Android launch smoke
+on:
+  workflow_dispatch:
+    inputs:
+      build_run:
+        description: Android build run ID with a debug APK
+        required: true
+
+jobs:
+  launch:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BUILD_RUN: ${{ inputs.build_run }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: gh run download "$BUILD_RUN" --repo "$GITHUB_REPOSITORY" --name gymgrid-debug-apk --dir smoke
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          target: default
+          arch: x86_64
+          profile: pixel_2
+          emulator-boot-timeout: 900
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          disable-animations: true
+          script: |
+            adb install smoke/app-debug.apk
+            adb logcat -c
+            adb shell am start -W -n dev.gymgrid.app/.MainActivity
+            sleep 3
+            adb shell pidof dev.gymgrid.app
+            adb shell screencap -p /sdcard/gymgrid.png
+            adb pull /sdcard/gymgrid.png smoke/gymgrid.png
+            adb logcat -d -t 500 > smoke/logcat.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gymgrid-launch-smoke
+          path: smoke/
