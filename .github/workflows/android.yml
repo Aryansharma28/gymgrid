@@ -18,7 +18,24 @@ jobs:
           packages: platform-tools
       - run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
       - run: bash gradlew assembleDebug
+      - name: Restore release signing key
+        if: github.event_name != 'pull_request'
+        env:
+          GYMGRID_KEYSTORE_B64: ${{ secrets.GYMGRID_KEYSTORE_B64 }}
+        run: printf '%s' "$GYMGRID_KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/gymgrid-release.p12"
+      - name: Build signed release APK
+        if: github.event_name != 'pull_request'
+        env:
+          GYMGRID_KEYSTORE_FILE: ${{ runner.temp }}/gymgrid-release.p12
+          GYMGRID_STORE_PASSWORD: ${{ secrets.GYMGRID_STORE_PASSWORD }}
+          GYMGRID_KEY_PASSWORD: ${{ secrets.GYMGRID_KEY_PASSWORD }}
+        run: bash gradlew assembleRelease
       - uses: actions/upload-artifact@v4
         with:
           name: gymgrid-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
+      - uses: actions/upload-artifact@v4
+        if: github.event_name != 'pull_request'
+        with:
+          name: gymgrid-release-apk
+          path: app/build/outputs/apk/release/app-release.apk

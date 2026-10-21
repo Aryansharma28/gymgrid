@@ -12,6 +12,25 @@ android {
         versionName '0.2.0'
     }
 
+    def keyFile = System.getenv('GYMGRID_KEYSTORE_FILE')
+    def releaseKeyPassword = System.getenv('GYMGRID_KEY_PASSWORD')
+    def releaseStorePassword = System.getenv('GYMGRID_STORE_PASSWORD')
+    if (keyFile && releaseKeyPassword && releaseStorePassword) {
+        signingConfigs {
+            release {
+                storeFile file(keyFile)
+                storePassword releaseStorePassword
+                keyAlias 'gymgrid'
+                keyPassword releaseKeyPassword
+            }
+        }
+        buildTypes {
+            release {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
