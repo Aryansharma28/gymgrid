@@ -1,6 +1,16 @@
 # GymGrid
 
+<p align="center">
+  <img src="app/src/main/res/drawable-nodpi/mascot_elephant.png" alt="GymGrid elephant mascot lifting a dumbbell" width="220" />
+</p>
+
 An open source Android workout calendar inspired by contribution grids. Answer **Yes** or **No** from your home screen widget. Yes turns a day green; No turns it gray. Your answers stay on your phone.
+
+## Preview
+
+![GymGrid design preview showing the app, month widget, and year widget](docs/preview.png)
+
+The preview illustrates the app and both widget sizes. The elephant mascot is included in the app and its launcher icon.
 
 ## Features
 
@@ -12,15 +22,23 @@ An open source Android workout calendar inspired by contribution grids. Answer *
 - Compact month widget and larger year widget
 - Data stored locally on your device, with no account or network access
 
-## Install
+## Install on a Samsung Galaxy S25
 
-On an Android 8.0 (API 26) or newer phone, download the APK from the [v0.2.0 preview release](https://github.com/Aryansharma28/gymgrid/releases/tag/v0.2.0). Android may ask you to allow installation from the app used to open the APK. You can also open this project in Android Studio and run the `app` configuration on your device.
+1. Open the [v0.2.0 release](https://github.com/Aryansharma28/gymgrid/releases/tag/v0.2.0) on your phone and tap **GymGrid-v0.2.0.apk** under **Assets**.
+2. Open the download in Samsung Internet, Chrome, or **My Files → Downloads** and tap **Install**.
+3. If Samsung asks, allow **Install unknown apps** for the app you opened the APK with. You can find this under **Settings → Security and privacy → More security settings → Install unknown apps**. If **Auto Blocker** interrupts the install, go to **Settings → Security and privacy → Auto Blocker**, switch it off for the installation, then turn it back on afterward.
+4. Open GymGrid once. Long press an empty spot on the home screen, tap **Widgets**, choose **GymGrid · Month** or **GymGrid · Year**, then tap **Add**. You can resize the widget by long pressing it and dragging a corner.
+5. Tap **Yes** or **No** directly on the widget each day. The app holds your monthly and yearly history.
 
-Add a widget by long pressing your home screen, choosing **Widgets**, then selecting **GymGrid · Month** or **GymGrid · Year**. Tap **Yes** or **No** on either widget to answer for today. Tap its calendar to open the app and edit past days.
+## Install on another Android phone
+
+Download **GymGrid-v0.2.0.apk** from the same release on an Android 8.0 or newer phone. Open the APK in your browser or file manager, allow that app to install unknown apps if prompted, and tap **Install**. Then long press the home screen, open **Widgets**, and add a GymGrid widget. Tap its calendar to open the app and edit past days.
+
+If you installed the early v0.1.0 debug preview, uninstall it before installing v0.2.0 because the signing key changed. Uninstalling v0.1.0 removes its locally saved days. Releases from v0.2.0 onward use the same private signing key so future updates can keep your data.
 
 ## Build
 
-The project uses Android Gradle Plugin 8.9.2, Gradle 8.11.1, Java 17, and Android SDK 35. Run `./gradlew assembleDebug` (or `gradlew.bat assembleDebug` on Windows). The output is `app/build/outputs/apk/debug/app-debug.apk`.
+The project uses Android Gradle Plugin 8.9.2, Gradle 8.11.1, Java 17, and Android SDK 35. Open this project in Android Studio and run the `app` configuration on your device, or run `./gradlew assembleDebug` (`gradlew.bat assembleDebug` on Windows). The output is `app/build/outputs/apk/debug/app-debug.apk`. Public downloads use a separately signed release APK.
 
 ## Privacy
 
