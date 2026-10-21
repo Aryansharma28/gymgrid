@@ -32,10 +32,10 @@ jobs:
             adb logcat -c
             adb shell am start -W -n dev.gymgrid.app/.MainActivity
             sleep 3
-            adb shell pidof dev.gymgrid.app
             adb shell screencap -p /sdcard/gymgrid.png
             adb pull /sdcard/gymgrid.png smoke/gymgrid.png
             adb logcat -d -t 500 > smoke/logcat.txt
+            adb shell pidof dev.gymgrid.app
       - uses: actions/upload-artifact@v4
         if: always()
         with:

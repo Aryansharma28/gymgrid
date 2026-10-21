@@ -91,6 +91,7 @@ public class MainActivity extends Activity {
         buildStats(content);
         buildMonth(content);
         buildYear(content);
+        buildGuide(content);
         buildDock(screen);
         setContentView(root);
         if (Build.VERSION.SDK_INT >= 30) {
@@ -247,6 +248,19 @@ public class MainActivity extends Activity {
         yearView = new YearView();
         yearView.setContentDescription("Year workout grid. Green days are workouts.");
         card.addView(yearView, new LinearLayout.LayoutParams(-1, dp(78)));
+    }
+
+    private void buildGuide(LinearLayout content) {
+        LinearLayout card = sectionCard();
+        content.addView(card, margins(-1, -2, 0, dp(14), 0, 0));
+        card.addView(text("Put GymGrid on your home screen", 20, WHITE, true));
+        TextView intro = text("Long press an empty space · Widgets · GymGrid", 13, MUTED, false);
+        card.addView(intro, margins(-1, -2, 0, dp(8), 0, dp(11)));
+        card.addView(text("01  Tap YES or NO to log today", 14, WHITE, true));
+        card.addView(text("02  Long press the widget to resize it", 14, WHITE, true),
+                margins(-1, -2, 0, dp(9), 0, 0));
+        card.addView(text("03  Tap the grid to open this app", 14, WHITE, true),
+                margins(-1, -2, 0, dp(9), 0, 0));
     }
 
     private void buildDock(LinearLayout screen) {
