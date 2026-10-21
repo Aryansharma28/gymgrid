@@ -12,7 +12,7 @@ An open source Android workout calendar inspired by contribution grids. Tap a da
 
 ## Install
 
-Open this project in Android Studio and run the `app` configuration on an Android 8.0 (API 26) or newer device. You can also download a debug APK from a successful GitHub Actions build, if available. Android may ask you to allow installation from the app used to open the APK.
+On an Android 8.0 (API 26) or newer phone, download the APK from the [v0.1.0 preview release](https://github.com/Aryansharma28/gymgrid/releases/tag/v0.1.0). Android may ask you to allow installation from the app used to open the APK. You can also open this project in Android Studio and run the `app` configuration on your device.
 
 Add a widget by long pressing your home screen, choosing **Widgets**, then selecting **GymGrid · Month** or **GymGrid · Year**. Tapping a widget opens the calendar so you can check or uncheck a day.
 
