@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">GymGrid</string>
+    <string name="widget_month_name">GymGrid · Month</string>
+    <string name="widget_year_name">GymGrid · Year</string>
+</resources>
