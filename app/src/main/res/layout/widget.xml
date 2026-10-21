@@ -1,5 +1,81 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-    <ImageView android:id="@+id/widget_image" android:layout_width="match_parent"
-        android:layout_height="match_parent" android:contentDescription="@string/app_name" />
-</FrameLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_background"
+    android:orientation="vertical"
+    android:padding="14dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/widget_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.08"
+            android:text="GYMGRID"
+            android:textColor="#43CC75"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/widget_streak"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="#A9BEAE"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/widget_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="#ECF7ED"
+        android:textSize="13sp" />
+
+    <ImageView
+        android:id="@+id/widget_image"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_weight="1"
+        android:contentDescription="@string/calendar_description"
+        android:scaleType="fitXY" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/widget_yes"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/widget_yes_button"
+            android:contentDescription="@string/widget_yes_description"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:text="YES"
+            android:textColor="#0B2516"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/widget_no"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="7dp"
+            android:layout_weight="1"
+            android:background="@drawable/widget_no_button"
+            android:contentDescription="@string/widget_no_description"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:text="NO"
+            android:textColor="#D8E5DB"
+            android:textSize="12sp" />
+    </LinearLayout>
+</LinearLayout>
