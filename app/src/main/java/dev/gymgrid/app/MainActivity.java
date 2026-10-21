@@ -132,7 +132,7 @@ public class MainActivity extends Activity {
         mark.setPadding(dp(7), dp(7), dp(7), dp(7));
         row.addView(mark, new LinearLayout.LayoutParams(dp(42), dp(42)));
         TextView name = text("GymGrid", 19, WHITE, true);
-        row.addView(name, margins(0, -2, dp(11), 0, 0, 0));
+        row.addView(name, margins(-2, -2, dp(11), 0, 0, 0));
         TextView privateLabel = text("PRIVATE BY DESIGN", 10, MUTED, true);
         privateLabel.setLetterSpacing(.08f);
         privateLabel.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);

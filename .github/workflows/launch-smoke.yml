@@ -34,6 +34,14 @@ jobs:
             sleep 3
             adb shell screencap -p /sdcard/gymgrid.png
             adb pull /sdcard/gymgrid.png smoke/gymgrid.png
+            adb shell input tap 290 1680
+            sleep 1
+            adb shell screencap -p /sdcard/gymgrid-yes.png
+            adb pull /sdcard/gymgrid-yes.png smoke/gymgrid-yes.png
+            adb shell input tap 790 1680
+            sleep 1
+            adb shell screencap -p /sdcard/gymgrid-no.png
+            adb pull /sdcard/gymgrid-no.png smoke/gymgrid-no.png
             adb logcat -d -t 500 > smoke/logcat.txt
             adb shell pidof dev.gymgrid.app
       - uses: actions/upload-artifact@v4
