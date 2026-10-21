@@ -294,7 +294,7 @@ public class MainActivity extends Activity {
         boolean answered = WorkoutStore.hasAnswer(this, today);
         boolean done = days.contains(today.toString());
         daysValue.setText(Integer.toString(days.size()));
-        streakValue.setText(Integer.toString(WorkoutStore.streak(days)));
+        streakValue.setText(Integer.toString(WorkoutStore.streak(this)));
         monthTitle.setText(displayed.format(
                 DateTimeFormatter.ofPattern("MMMM yyyy", Locale.getDefault())));
         heroStatus.setText(!answered ? "Ready when you are" : done

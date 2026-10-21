@@ -46,7 +46,7 @@ public class GymWidgetProvider extends AppWidgetProvider {
         views.setTextViewText(R.id.widget_no, answered && !yes ? "✓ NO" : "NO");
         views.setViewVisibility(R.id.widget_streak, year ? View.VISIBLE : View.GONE);
         if (year) views.setTextViewText(R.id.widget_streak,
-                WorkoutStore.streak(WorkoutStore.days(context)) + " DAY STREAK");
+                WorkoutStore.streak(context) + " DAY STREAK");
         Intent open = new Intent(context, MainActivity.class);
         PendingIntent pending = PendingIntent.getActivity(context, 0, open,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);

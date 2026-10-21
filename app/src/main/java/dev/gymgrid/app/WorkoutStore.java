@@ -51,9 +51,14 @@ final class WorkoutStore {
         setAnswer(context, date, !isDone(context, date));
     }
 
-    static int streak(Set<String> days) {
+    static int streak(Context context) {
+        Set<String> days = days(context);
+        Set<String> answered = answered(context);
         LocalDate cursor = LocalDate.now();
-        if (!days.contains(cursor.toString())) cursor = cursor.minusDays(1);
+        if (!days.contains(cursor.toString())) {
+            if (answered.contains(cursor.toString())) return 0;
+            cursor = cursor.minusDays(1);
+        }
         int count = 0;
         while (days.contains(cursor.toString())) {
             count++;
