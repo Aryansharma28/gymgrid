@@ -1,0 +1,39 @@
+name: Visual preview
+on:
+  workflow_dispatch:
+    inputs:
+      build_run:
+        description: Android build run ID containing the APK
+        required: true
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BUILD_RUN: ${{ inputs.build_run }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: gh run download "$BUILD_RUN" --repo "$GITHUB_REPOSITORY" --name gymgrid-debug-apk --dir preview
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_7
+          script: |
+            adb install preview/app-debug.apk
+            adb shell am start -n dev.gymgrid.app/.MainActivity
+            sleep 3
+            adb shell screencap -p /sdcard/gymgrid.png
+            adb pull /sdcard/gymgrid.png preview/gymgrid-screen.png
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gymgrid-screen-preview
+          path: preview/gymgrid-screen.png
